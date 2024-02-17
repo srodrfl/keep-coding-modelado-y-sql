@@ -648,25 +648,37 @@ select tv.id_copia, s.id , tv.fecha_alquiler , tv.fecha_devolucion
 from tmp_videoclub tv 
 left join socio s on s.identificacion = tv.dni ;
 
-
-
+--peliculas que están prestadas
+create view peliculas_alquiladas as
 select p.id_copia, p.fecha_alquiler , p.fecha_devolucion 
 from prestamo p
 where p.fecha_devolucion is null
 order by p.id_copia ;
 
+--Titulo de la pelicula y numero de copias
+select p.titulo, p.id, count(p.titulo) 
+from copia c
+inner join pelicula p on p.id = c.id_pelicula 
+group by p.titulo, p.id;
 
+--Numero de peliculas que no se han devuelto
+select p.titulo, p.id, count(p.titulo) 
+from copia c
+inner join pelicula p on p.id = c.id_pelicula 
+inner join prestamo p2 on p2.id_copia = c.id
+where p2.fecha_devolucion is null
+group by p.titulo, p.id;
 
-select * from copia;
-
-
-select tv.id_copia, tv.titulo, tv.fecha_alquiler , tv.fecha_devolucion 
-from tmp_videoclub tv 
-where tv.fecha_devolucion is null
-order by tv.id_copia ;
-
-
-
-
-
-
+-- Titulo de las peliculas disponibles y numero de copias
+select p.titulo,  count(p.titulo) disponibles
+from copia c 
+inner join pelicula p on p.id = c.id_pelicula 
+where not (c.id in
+	(
+	select p.id_copia
+	from prestamo p
+	where p.fecha_devolucion is null
+	order by p.id_copia 
+	)
+)
+group by p.titulo;
