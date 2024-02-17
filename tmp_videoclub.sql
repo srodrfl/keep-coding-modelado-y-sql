@@ -649,7 +649,6 @@ from tmp_videoclub tv
 left join socio s on s.identificacion = tv.dni ;
 
 --peliculas que están prestadas
-create view peliculas_alquiladas as
 select p.id_copia, p.fecha_alquiler , p.fecha_devolucion 
 from prestamo p
 where p.fecha_devolucion is null
@@ -678,7 +677,6 @@ where not (c.id in
 	select p.id_copia
 	from prestamo p
 	where p.fecha_devolucion is null
-	order by p.id_copia 
 	)
 )
 group by p.titulo;
