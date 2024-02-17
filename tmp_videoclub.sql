@@ -643,10 +643,30 @@ from tmp_videoclub tv
 inner join pelicula p on p.titulo = tv.titulo
 order by tv.id_copia ;
 
+insert into prestamo (id_copia, id_socio, fecha_alquiler, fecha_devolucion)
+select tv.id_copia, s.id , tv.fecha_alquiler , tv.fecha_devolucion 
+from tmp_videoclub tv 
+left join socio s on s.identificacion = tv.dni ;
+
+
+
+select p.id_copia, p.fecha_alquiler , p.fecha_devolucion 
+from prestamo p
+where p.fecha_devolucion is null
+order by p.id_copia ;
+
+
+
+select * from copia;
+
+
+select tv.id_copia, tv.titulo, tv.fecha_alquiler , tv.fecha_devolucion 
+from tmp_videoclub tv 
+where tv.fecha_devolucion is null
+order by tv.id_copia ;
 
 
 
 
 
 
-	
